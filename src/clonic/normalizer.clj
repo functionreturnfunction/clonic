@@ -1,6 +1,6 @@
 (ns clonic.normalizer
-  (:use  [clojure.contrib.string  :only (split lower-case replace-re)] 
-        [clojure.contrib.str-utils2  :only (replace)]    ))
+  (:use  [clojure.string  :only (split lower-case replace)]
+         ))
 
 (defn pattern-replacer ( [x] x)
   ([x y]

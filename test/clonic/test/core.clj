@@ -1,7 +1,7 @@
 (ns clonic.test.core
   (:use [clonic.core] :reload-all)
-  (:use [clojure.test ])
-  (:use clojure.contrib.string)
+  (:use [clojure.test])
+  (:use clojure.string)
   (:use clj-time.core))
 
 ;(run-tests 'clonic.test.core)
@@ -12,25 +12,28 @@
        (= (hour date1) (hour date2)) 
        (= (year date1) (year date2)) ))
 
-
 (defn deq? [date exp]  (is (date-eq? date (parse-date exp))) )
 
 (def current (now))
-
-
-
+(def current-year (year current))
 
 (defmacro expect [ expectation date ]
-  `(deftest ~(symbol (str "test-"  (replace-str " " "-" expectation)))   (deq? ~date ~expectation))  )
+  `(deftest ~(symbol (str "test-"  (replace " " "-" expectation)))   (deq? ~date ~expectation))  )
 
+(deftest test-now
+  (deq? current "now"))
 
-(expect "now" current )
+(deftest test-tomorrow
+  (deq? (plus current (days 1)) "tomorrow"))
 
-(expect  "tomorrow"   (plus current (days 1)))
+(deftest test-MMM-dd-yyyy
+  (date-time current-year 5 27)
+  (format "may 27 %d" current-year))
 
-(expect "may 27"  (date-time 2012 5 27) )
+(deftest test-MMM-dd-yy-ht
+  (date-time current-year 5 28 17)
+  (format "may 28 %d 5pm" current-year))
 
-(expect "may 28 5pm"  (date-time 2012 5 28 17) )
-
-(expect "may 28 5am"  (date-time 2012 5 28 5) )
-
+(deftest test-MMM-dd-yy-ht2
+  (date-time current-year 5 28 5)
+  (format "may 28 %d 5am" current-year))
